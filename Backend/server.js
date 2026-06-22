@@ -1,55 +1,57 @@
 const sqlite3 = require("sqlite3").verbose();
 
 const db = new sqlite3.Database("./database.db");
-db.run(`
-CREATE TABLE IF NOT EXISTS products(
- id INTEGER PRIMARY KEY AUTOINCREMENT,
- name TEXT NOT NULL,
- category TEXT NOT NULL,
- price INTEGER NOT NULL
-)
-`);
+db.serialize(() => {
 
-db.get(
-  "SELECT COUNT(*) as count FROM products",
-  [],
-  (err,row)=>{
+  db.run(`
+  CREATE TABLE IF NOT EXISTS products(
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   name TEXT NOT NULL,
+   category TEXT NOT NULL,
+   price INTEGER NOT NULL
+  )
+  `);
 
-    if(row.count===0){
+  db.get(
+    "SELECT COUNT(*) AS count FROM products",
+    [],
+    (err, row) => {
 
-      db.run(`
-      INSERT INTO products (name,category,price)
-      VALUES
+      if (err) {
+        console.log(err);
+        return;
+      }
 
-      ('HP Victus','Laptop',65999),
-      ('Dell G15','Laptop',72999),
-      ('Lenovo LOQ','Laptop',69999),
-      ('Acer Nitro V','Laptop',67999),
-      ('MacBook Air M3','Laptop',109900),
+      if (row && row.count === 0) {
 
-      ('Logitech G102','Mouse',1499),
-      ('Logitech G304','Mouse',2999),
+        db.run(`
+        INSERT INTO products (name,category,price)
+        VALUES
+        ('HP Victus','Laptop',65999),
+        ('Dell G15','Laptop',72999),
+        ('Lenovo LOQ','Laptop',69999),
+        ('Acer Nitro V','Laptop',67999),
+        ('MacBook Air M3','Laptop',109900),
+        ('Logitech G102','Mouse',1499),
+        ('Logitech G304','Mouse',2999),
+        ('Cosmic Byte CB-GK-16','Keyboard',1999),
+        ('Redragon K552','Keyboard',3499),
+        ('Sony WH-CH520','Headphones',4499),
+        ('Boat Rockerz 550','Headphones',1999),
+        ('JBL Go 3','Speaker',2999),
+        ('Boat Stone 350','Speaker',1799),
+        ('Razer Gigantus V2','Mouse Pad',999),
+        ('Realme Buds Air 6','Earbuds',2999)
+        `);
 
-      ('Cosmic Byte CB-GK-16','Keyboard',1999),
-      ('Redragon K552','Keyboard',3499),
-
-      ('Sony WH-CH520','Headphones',4499),
-      ('Boat Rockerz 550','Headphones',1999),
-
-      ('JBL Go 3','Speaker',2999),
-      ('Boat Stone 350','Speaker',1799),
-
-      ('Razer Gigantus V2','Mouse Pad',999),
-
-      ('Realme Buds Air 6','Earbuds',2999)
-      `);
-
-      console.log("✅ Default products inserted");
+        console.log("✅ Default products inserted");
+      }
 
     }
+  );
 
-  }
-);
+});
+
 
 // db.all(
 //  "SELECT * FROM products",
