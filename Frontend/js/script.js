@@ -7,7 +7,9 @@ async function loadProducts() {
   try {
 
     const response =
-    await fetch("http://localhost:3000/products");
+    await fetch(
+    "https://ecommerce-store-u1gk.onrender.com/products"
+    );
 
     const products =
     await response.json();
