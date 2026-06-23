@@ -180,8 +180,6 @@ async function loadCart(){
 
   const cart = await response.json();
 
-  console.log("Cart Data:", cart);
-
   const cartItems =
   document.getElementById("cartItems");
 
@@ -200,9 +198,35 @@ async function loadCart(){
    document.createElement("li");
 
    li.innerHTML = `
+
    ${item.product_name}
-   × ${item.quantity}
+
+   <button onclick="decreaseQuantity(${item.id})">
+   -
+   </button>
+
+   ${item.quantity}
+
+   <button onclick="increaseQuantity(${item.id})">
+   +
+   </button>
+
    - ₹${(item.price * item.quantity).toLocaleString()}
+
+   <button
+   onclick="removeFromCart(${item.id})"
+   style="
+   margin-left:10px;
+   background:red;
+   color:white;
+   border:none;
+   padding:5px 10px;
+   border-radius:5px;
+   cursor:pointer;
+   ">
+   Remove
+   </button>
+
    `;
 
    cartItems.appendChild(li);
@@ -221,6 +245,44 @@ async function loadCart(){
 
 }
 
+async function increaseQuantity(id){
+
+ await fetch(
+  `https://ecommerce-store-u1gk.onrender.com/cart/increase/${id}`,
+  {
+   method:"PUT"
+  }
+ );
+
+ loadCart();
+
+}
+
+async function decreaseQuantity(id){
+
+ await fetch(
+  `https://ecommerce-store-u1gk.onrender.com/cart/decrease/${id}`,
+  {
+   method:"PUT"
+  }
+ );
+
+ loadCart();
+
+}
+
+async function removeFromCart(id){
+
+ await fetch(
+  `https://ecommerce-store-u1gk.onrender.com/cart/${id}`,
+  {
+   method:"DELETE"
+  }
+ );
+
+ loadCart();
+
+}
 
 /* ===========================
    UPDATE CART
