@@ -133,36 +133,66 @@ JSON.parse(
 localStorage.getItem("wishlist")
 ) || [];
 
-function addToCart(productName, price){
+async function addToCart(productName, price){
 
-const existingItem = cart.find(
- item => item.name === productName
-);
+ try{
 
-if(existingItem){
+  const response = await fetch(
+   "https://ecommerce-store-u1gk.onrender.com/cart",
+   {
+    method:"POST",
+    headers:{
+     "Content-Type":"application/json"
+    },
+    body: JSON.stringify({
+     product_name: productName,
+     price: price
+    })
+   }
+  );
 
- existingItem.quantity++;
+  const data = await response.json();
+
+  console.log(data);
+
+  showToast(
+   `${productName} Added Successfully`
+  );
+
+  loadCart();
+
+ }
+ catch(error){
+
+  console.error(error);
+
+ }
 
 }
-else{
 
- cart.push({
-  name: productName,
-  price: price,
-  quantity: 1
- });
+
+async function loadCart(){
+
+ try{
+
+  const response = await fetch(
+   "http://localhost:3000/cart"
+  );
+
+  const cart = await response.json();
+
+  console.log("Cart Data:", cart);
+
+ }
+ catch(error){
+
+  console.error(error);
+
+ }
 
 }
 
-total += price;
 
-updateCart();
-
-showToast(
-`${productName} Added Successfully`
-);
-
-}
 
 /* ===========================
    UPDATE CART
@@ -776,3 +806,10 @@ ${order.date}
  });
 
 }
+
+
+window.onload = () => {
+
+ loadCart();
+
+};
