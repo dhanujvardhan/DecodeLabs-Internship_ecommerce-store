@@ -253,44 +253,70 @@ app.get("/cart",(req,res)=>{
 
 app.post("/cart",(req,res)=>{
 
- const {
-  product_name,
-  price
- } = req.body;
+ const { product_name, price } = req.body;
 
- db.run(
+ db.get(
+  "SELECT * FROM cart WHERE product_name=?",
+  [product_name],
 
-  `INSERT INTO cart
-   (product_name,price)
-   VALUES(?,?)`,
-
-  [product_name,price],
-
-  function(err){
+  (err,row)=>{
 
    if(err){
-
-    return res
-    .status(500)
-    .json(err);
-
+    return res.status(500).json(err);
    }
 
-   res.json({
+   if(row){
 
-    message:
-    "Added To Cart",
+    db.run(
+     `UPDATE cart
+      SET quantity = quantity + 1
+      WHERE id=?`,
+     [row.id],
 
-    id:this.lastID
+     function(err){
 
-   });
+      if(err){
+       return res.status(500).json(err);
+      }
+
+      res.json({
+       message:"Quantity Updated"
+      });
+
+     }
+    );
+
+   }
+   else{
+
+    db.run(
+     `INSERT INTO cart
+      (product_name,price,quantity)
+      VALUES(?,?,1)`,
+
+     [product_name,price],
+
+     function(err){
+
+      if(err){
+       return res.status(500).json(err);
+      }
+
+      res.json({
+       message:"Added To Cart",
+       id:this.lastID
+      });
+
+     }
+    );
+
+   }
 
   }
 
  );
 
 });
-
 
 // INCREASE QUANTITY
 app.put("/cart/increase/:id",(req,res)=>{
