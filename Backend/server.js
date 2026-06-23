@@ -292,6 +292,86 @@ app.post("/cart",(req,res)=>{
 });
 
 
+// INCREASE QUANTITY
+app.put("/cart/increase/:id",(req,res)=>{
+
+ const id = req.params.id;
+
+ db.run(
+  `UPDATE cart
+   SET quantity = quantity + 1
+   WHERE id=?`,
+  [id],
+
+  function(err){
+
+   if(err){
+    return res.status(500).json(err);
+   }
+
+   res.json({
+    message:"Quantity Increased"
+   });
+
+  }
+ );
+
+});
+
+app.put("/cart/decrease/:id",(req,res)=>{
+
+ const id = req.params.id;
+
+ db.run(
+  `UPDATE cart
+   SET quantity = quantity - 1
+   WHERE id=? AND quantity > 1`,
+  [id],
+
+  function(err){
+
+   if(err){
+    return res.status(500).json(err);
+   }
+
+   res.json({
+    message:"Quantity Decreased"
+   });
+
+  }
+ );
+
+});
+
+
+
+// DELETE CART ITEM
+
+app.delete("/cart/:id",(req,res)=>{
+
+ const id = req.params.id;
+
+ db.run(
+  "DELETE FROM cart WHERE id=?",
+  [id],
+
+  function(err){
+
+   if(err){
+    return res.status(500).json(err);
+   }
+
+   res.json({
+    message:"Item Removed"
+   });
+
+  }
+ );
+
+});
+
+
+
 // DELETE Product
 app.delete(
 "/products/:id",
