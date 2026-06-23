@@ -12,6 +12,15 @@ db.serialize(() => {
   )
   `);
 
+  db.run(`
+    CREATE TABLE IF NOT EXISTS cart(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    product_name TEXT NOT NULL,
+    price INTEGER NOT NULL,
+    quantity INTEGER DEFAULT 1
+    )
+    `);
+
   db.get(
     "SELECT COUNT(*) AS count FROM products",
     [],
@@ -94,6 +103,24 @@ app.get("/products",(req,res)=>{
 
     return res.status(500).json(err);
 
+   }
+
+   res.json(rows);
+
+ });
+
+});
+
+// TEST CART TABLE
+app.get("/test-cart",(req,res)=>{
+
+ db.all(
+  "SELECT * FROM cart",
+  [],
+  (err,rows)=>{
+
+   if(err){
+    return res.status(500).json(err);
    }
 
    res.json(rows);
@@ -201,6 +228,69 @@ app.put("/products/:id", (req, res) => {
   );
 
 });
+
+// GET CART
+
+app.get("/cart",(req,res)=>{
+
+ db.all(
+  "SELECT * FROM cart",
+  [],
+  (err,rows)=>{
+
+   if(err){
+    return res.status(500).json(err);
+   }
+
+   res.json(rows);
+
+ });
+
+});
+
+
+// ADD TO CART
+
+app.post("/cart",(req,res)=>{
+
+ const {
+  product_name,
+  price
+ } = req.body;
+
+ db.run(
+
+  `INSERT INTO cart
+   (product_name,price)
+   VALUES(?,?)`,
+
+  [product_name,price],
+
+  function(err){
+
+   if(err){
+
+    return res
+    .status(500)
+    .json(err);
+
+   }
+
+   res.json({
+
+    message:
+    "Added To Cart",
+
+    id:this.lastID
+
+   });
+
+  }
+
+ );
+
+});
+
 
 // DELETE Product
 app.delete(
