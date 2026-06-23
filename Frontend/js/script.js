@@ -175,9 +175,9 @@ async function loadCart(){
 
  try{
 
-  const response = await fetch(
-   "http://localhost:3000/cart"
-  );
+   const response = await fetch(
+   "https://ecommerce-store-u1gk.onrender.com/cart"
+   );
 
   const cart = await response.json();
 
