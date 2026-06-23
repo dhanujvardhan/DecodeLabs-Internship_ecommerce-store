@@ -475,10 +475,11 @@ contactForm.reset();
 /* ===========================
    PAGE LOAD
 =========================== */
-
 window.onload = () => {
 
   loadProducts();
+
+  loadCart();
 
   updateCart();
 
@@ -487,7 +488,7 @@ window.onload = () => {
   updateOrderHistory();
 
   console.log(
-  "TechStore Pro Loaded Successfully"
+   "TechStore Pro Loaded Successfully"
   );
 
 };
@@ -807,9 +808,3 @@ ${order.date}
 
 }
 
-
-window.onload = () => {
-
- loadCart();
-
-};
