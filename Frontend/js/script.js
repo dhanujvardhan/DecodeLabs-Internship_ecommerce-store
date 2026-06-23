@@ -170,18 +170,47 @@ async function addToCart(productName, price){
 
 }
 
-
 async function loadCart(){
 
  try{
 
-   const response = await fetch(
+  const response = await fetch(
    "https://ecommerce-store-u1gk.onrender.com/cart"
-   );
+  );
 
   const cart = await response.json();
 
   console.log("Cart Data:", cart);
+
+  const cartItems =
+  document.getElementById("cartItems");
+
+  const totalPrice =
+  document.getElementById("totalPrice");
+
+  cartItems.innerHTML = "";
+
+  let total = 0;
+
+  cart.forEach(item => {
+
+   total += item.price * item.quantity;
+
+   const li =
+   document.createElement("li");
+
+   li.innerHTML = `
+   ${item.product_name}
+   × ${item.quantity}
+   - ₹${(item.price * item.quantity).toLocaleString()}
+   `;
+
+   cartItems.appendChild(li);
+
+  });
+
+  totalPrice.innerText =
+  `Total: ₹${total.toLocaleString()}`;
 
  }
  catch(error){
@@ -191,7 +220,6 @@ async function loadCart(){
  }
 
 }
-
 
 
 /* ===========================
