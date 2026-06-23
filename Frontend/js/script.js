@@ -359,20 +359,20 @@ function updateCartCount(){
    REMOVE FROM CART
 =========================== */
 
-function removeFromCart(index){
+// function removeFromCart(index){
 
-total -= cart[index].price;
+// total -= cart[index].price;
 
-cart.splice(index,1);
+// cart.splice(index,1);
 
-localStorage.setItem(
-"cart",
-JSON.stringify(cart)
-);
+// localStorage.setItem(
+// "cart",
+// JSON.stringify(cart)
+// );
 
-updateCart();
+// updateCart();
 
-}
+// }
 
 /* ===========================
    DARK MODE
